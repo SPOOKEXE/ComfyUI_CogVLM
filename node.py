@@ -21,17 +21,28 @@ def caption_cogvlm(image, max_new_tokens):
         low_cpu_mem_usage=True,
         trust_remote_code=True
     ).to('cuda').eval()
-    image = image.squeeze(0)
-    image = image.permute(2, 0, 1)
+
+    image = image.squeeze(0).permute(2, 0, 1)
     image = T.ToPILImage()(image)
+
     query = 'Describe the content of the image in a clear and concise sentence, focusing on the main objects, actions, and context, while maintaining natural language fluency'
-    inputs = model.build_conversation_input_ids(tokenizer, query=query, history=[], images=[image])
-    gen_kwargs = {"max_new_tokens": max_new_tokens, "do_sample": False}
-    with torch.no_grad():
-        outputs = model.generate(**inputs, **gen_kwargs)
-        outputs = outputs[:, inputs['input_ids'].shape[1]:]
-    print("Finished captioning image with CogVLM")
-    return tokenizer.decode(outputs[0])
+
+    try:
+        inputs = model.build_conversation_input_ids(tokenizer, query=query, history=[], images=[image])
+        print("Generated inputs:", inputs)
+
+        if 'input_ids' not in inputs:
+            raise ValueError("Missing 'input_ids' in the input dictionary")
+
+        gen_kwargs = {"max_new_tokens": max_new_tokens, "do_sample": False}
+        with torch.no_grad():
+            outputs = model.generate(inputs['input_ids'], **gen_kwargs)
+            outputs = outputs[:, inputs['input_ids'].shape[1]:]
+        print("Finished captioning image with CogVLM")
+        return tokenizer.decode(outputs[0])
+    except Exception as e:
+        print("Error during captioning:", str(e))
+        raise
 
 class CogVLMCaption:
     @classmethod
