@@ -11,7 +11,8 @@ from PIL import Image
 
 import torch
 
-def caption_cogvlm(img, max_length):
+def caption_cogvlm(image, max_length):
+    print("Captioning image with CogVLM")
     tokenizer = LlamaTokenizer.from_pretrained('lmsys/vicuna-7b-v1.5')
     model = AutoModelForCausalLM.from_pretrained(
         'THUDM/cogvlm-chat-hf',
@@ -20,7 +21,6 @@ def caption_cogvlm(img, max_length):
         trust_remote_code=True
     ).to('cuda').eval()
     query = 'Describe the content of the image in a clear and concise sentence, focusing on the main objects, actions, and context, while maintaining natural language fluency'
-
     inputs = model.build_conversation_input_ids(tokenizer, query=query, history=[], images=[image])
     inputs = {
         'input_ids': inputs['input_ids'].unsqueeze(0).to('cuda'),
@@ -33,6 +33,7 @@ def caption_cogvlm(img, max_length):
     with torch.no_grad():
         outputs = model.generate(**inputs, **gen_kwargs)
         outputs = outputs[:, inputs['input_ids'].shape[1]:]
+    print("Finished captioning image with CogVLM")
     return tokenizer.decode(outputs[0])
 
 class CogVLMCaption:
