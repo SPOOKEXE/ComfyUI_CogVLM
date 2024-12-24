@@ -1,5 +1,3 @@
 transformers
-torch
-torchvision
 pillow
 xformers==0.0.20
