@@ -12,7 +12,7 @@ from PIL import Image
 import torchvision.transforms as T
 import torch
 
-def caption_cogvlm(image, max_length):
+def caption_cogvlm(image, max_new_tokens):
     print("Captioning image with CogVLM")
     tokenizer = LlamaTokenizer.from_pretrained('lmsys/vicuna-7b-v1.5')
     model = AutoModelForCausalLM.from_pretrained(
@@ -26,7 +26,7 @@ def caption_cogvlm(image, max_length):
     image = T.ToPILImage()(image)
     query = 'Describe the content of the image in a clear and concise sentence, focusing on the main objects, actions, and context, while maintaining natural language fluency'
     inputs = model.build_conversation_input_ids(tokenizer, query=query, history=[], images=[image])
-    gen_kwargs = {"max_length": max_length, "do_sample": False}
+    gen_kwargs = {"max_new_tokens": max_new_tokens, "do_sample": False}
     with torch.no_grad():
         outputs = model.generate(**inputs, **gen_kwargs)
         outputs = outputs[:, inputs['input_ids'].shape[1]:]
@@ -39,13 +39,13 @@ class CogVLMCaption:
         return {
             "required": {
                 "image" : ('IMAGE', {}),
-                "max_length" : ('INT', {})
+                "max_new_tokens" : ('INT', {})
             }
         }
     CATEGORY = "caption"
     FUNCTION = "main"
     RETURN_TYPES = ("STRING", )
 
-    def main(self, image, max_length):
-        result = caption_cogvlm(image, max_length)
+    def main(self, image, max_new_tokens):
+        result = caption_cogvlm(image, max_new_tokens)
         return (result, )
