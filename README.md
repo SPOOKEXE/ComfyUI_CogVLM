@@ -20,6 +20,7 @@ The model will be immediately unloaded after usage.
 3. `git clone https://github.com/SPOOKEXE/ComfyUI_CogVLM`
 4. cd ComfyUI_CogVLM
 5. pip install -r requirements.txt
+5.1. You may need to reinstall torch as xformers tries to use 2.0.1 and I have had success even with 2.5.1
 6. Run ComfyUI
 
 # Usage
