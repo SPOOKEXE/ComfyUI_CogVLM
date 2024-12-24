@@ -48,5 +48,5 @@ class CogVLMCaption:
     RETURN_TYPES = ("STRING", )
 
     def main(self, image, max_length):
-        result = caption(image, max_length)
+        result = caption_cogvlm(image, max_length)
         return (result, )
