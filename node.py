@@ -19,6 +19,7 @@ def caption_cogvlm(img, max_length):
         low_cpu_mem_usage=True,
         trust_remote_code=True
     ).to('cuda').eval()
+    query = 'Describe the content of the image in a clear and concise sentence, focusing on the main objects, actions, and context, while maintaining natural language fluency'
 
     inputs = model.build_conversation_input_ids(tokenizer, query=query, history=[], images=[image])
     inputs = {
