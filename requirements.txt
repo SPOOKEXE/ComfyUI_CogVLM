@@ -1,3 +1,13 @@
 transformers
 pillow
 xformers==0.0.20
+accelerate
+bitsandbytes==0.45.0
+transformers
+torch==2.5.1+cu124
+einops==0.8.0
+protobuf
+sentencepiece==0.2.0
+torchvision==0.20.1+cu124
+xformers==0.0.28.post3
+# https://download.pytorch.org/whl/cu124
