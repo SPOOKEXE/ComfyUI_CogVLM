@@ -26,7 +26,7 @@ def caption_cogvlm(image, max_length):
         'input_ids': inputs['input_ids'].unsqueeze(0).to('cuda'),
         'token_type_ids': inputs['token_type_ids'].unsqueeze(0).to('cuda'),
         'attention_mask': inputs['attention_mask'].unsqueeze(0).to('cuda'),
-        'images': [[inputs['images'][0].to('cuda').to(torch.bfloat16)]],
+        'images': [image],
     }
     gen_kwargs = {"max_length": max_length, "do_sample": False}
 
