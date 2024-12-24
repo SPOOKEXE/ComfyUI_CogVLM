@@ -2,7 +2,7 @@
 
 CogVLM captioning
 
-Note: this code only supports CUDA (NVIDIA).
+Note: this code only supports CUDA (NVIDIA) and needs xformers support/enabled.
 
 # Installation
 
@@ -14,7 +14,7 @@ Note: this code only supports CUDA (NVIDIA).
 
 1. Insert a CogVLM node
 
-![Visual Usage Of Vis2Seq Node](image.png)
+![Visual Usage Of CogVLM Node](image.png)
 
 # Links
 
