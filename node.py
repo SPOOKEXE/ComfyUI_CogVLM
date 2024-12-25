@@ -9,7 +9,7 @@ sys.path.append(
 from transformers import AutoModelForCausalLM, LlamaTokenizer
 from PIL import Image
 from torchvision import transforms
-from bitsandbytes import Int4Quantizer
+# from bitsandbytes import Int4Quantizer
 
 import torchvision.transforms as T
 import torch
@@ -24,10 +24,10 @@ def caption_cogvlm(image, max_new_tokens):
 		low_cpu_mem_usage=True,
 		trust_remote_code=True
 	).to('cuda').eval()
-	
-	quantizer = Int4Quantizer(model)
-	model = quantizer.quantize()
-	model = model.eval().to('cuda')
+
+	# quantizer = Int4Quantizer(model)
+	# model = quantizer.quantize()
+	# model = model.eval().to('cuda')
 
 	# Process the image
 	image = image.squeeze(0).permute(2, 0, 1)
@@ -44,7 +44,7 @@ def caption_cogvlm(image, max_new_tokens):
 		'images': [[inputs['images'][0].to('cuda').to(torch.bfloat16)]],
 	}
 	gen_kwargs = {"max_new_tokens": max_new_tokens, "do_sample": False}
-	
+
 	with torch.no_grad():
 		outputs = model.generate(**inputs, **gen_kwargs)
 		outputs = outputs[:, inputs['input_ids'].shape[1]:]
